@@ -34,6 +34,14 @@ export function parseTime(time, cFormat) {
   return time_str
 }
 
+export function param2Obj(url) {
+  const search = url.split('?')[1]
+  if (!search) {
+    return {}
+  }
+  return JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+}
+
 export function formatTime(time, option) {
   time = +time * 1000
   const d = new Date(time)
@@ -55,4 +63,23 @@ export function formatTime(time, option) {
   } else {
     return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
+}
+
+export function isPlainObject(obj) {
+  if (typeof (obj) !== 'object' || obj.nodeType || obj !== null && obj !==
+    undefined && obj === obj.window) {
+    return false
+  }
+
+  if (obj.constructor &&
+    !Object.prototype.hasOwnProperty.call(obj.constructor.prototype,
+      'isPrototypeOf')) {
+    return false
+  }
+
+  return true
+}
+
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n)
 }
