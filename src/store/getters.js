@@ -6,7 +6,4 @@ const getters = {
   name: state => state.user.name,
   roles: state => state.user.roles
 }
-console.log('----------------')
-console.log(getters)
-console.log('----------------')
 export default getters
