@@ -1,5 +1,5 @@
 <template>
-  <div @click="clickEdit">
+  <div>
     <el-select v-model="value" @change="onChange" placeholder="请选择">
       <el-option v-for="opt in item.options" :key="opt.value" :label="opt.label" :value="opt.value"></el-option>
     </el-select>
@@ -12,8 +12,7 @@
     props: ['scope', 'item'],
     data: function() {
       return {
-        value: this.scope.row[this.item.prop],
-        isInit: true
+        value: this.scope.row[this.item.prop]
       }
     },
     watch: {
@@ -22,15 +21,11 @@
       }
     },
     methods: {
-      clickEdit: function() {
-        this.isInit = false
-      },
       onChange: function() {
         var self = this
         var item = this.item || null
-        if (item && !this.isInit && item.onChange && typeof item.onChange === 'function') {
+        if (item && item.onChange && typeof item.onChange === 'function') {
           item.onChange(self.scope.row, self.value, self.scope, self.item)
-          self.isInit = true
         }
       }
     }
