@@ -29,12 +29,12 @@
       return {}
     },
     methods: {
-      onEnter: function(env) {
+      onEnter(env) {
         this.config.onEnter && this.config.onEnter.call(null, env)
       },
 
       // 当输入框失去焦点时，要去掉字符两端的空格
-      trimValue: function() {
+      trimValue() {
         this.form.props[this.prop] = this.form.props[this.prop].trim()
         if (this.config.onBlur && typeof this.config.onBlur === 'function') {
           this.form.props[this.config.prop] = this.config.onBlur(this.config.props[this.prop])

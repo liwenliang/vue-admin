@@ -19,10 +19,8 @@
         type: Object
       }
     },
-    data: function() {
+    data() {
       return {}
-    },
-    methods: {
     }
   }
 </script>

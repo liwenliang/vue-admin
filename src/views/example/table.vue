@@ -62,11 +62,7 @@
           ],
           select: {
             isSelectable: true,
-            selectChange: function(selectedArr) {
-              console.log('----------------')
-              console.log(selectedArr)
-              console.log('----------------')
-            },
+            selectChange: this.onSelectChange,
             selectable: function(row, index) {
               if (row.sex === '0') {
                 return false
@@ -89,7 +85,7 @@
               label: 'select',
               sortable: true,
               disabled: false,
-              onChange: this.onchange,
+              onChage: this.onChage,
               width: '100',
               options: [
                 {
@@ -155,17 +151,17 @@
                 {
                   title: 'btn1',
                   type: 'primary',
-                  onclick: this.onclick
+                  onClick: this.onClick
                 },
                 {
                   title: 'btn2',
                   type: 'text',
-                  onclick: this.onclick
+                  onClick: this.onClick
                 },
                 {
                   title: 'btn3',
                   type: 'danger',
-                  onclick: this.onclick
+                  onClick: this.onClick
                 }
               ]
             },
@@ -179,28 +175,28 @@
                   prop: 'status',
                   value: '1',
                   title: '已买',
-                  onclick: this.onclick
+                  onClick: this.onClick
                 },
                 {
                   prop: 'status',
                   value: '1',
                   title: '再次购买',
                   type: 'primary',
-                  onclick: this.buyAgain
+                  onClick: this.buyAgain
                 },
                 {
                   prop: 'status',
                   value: '1',
                   title: '评价',
                   type: 'warn',
-                  onclick: this.discuss
+                  onClick: this.discuss
                 },
                 {
                   prop: 'status',
                   value: '2',
                   title: '未购买,点击购买',
                   type: 'primary',
-                  onclick: this.onclick
+                  onClick: this.onClick
                 }
               ]
             },
@@ -271,14 +267,14 @@
        * @param prop          当前值得属性字段
        * @param value         当前属性字段的值
        */
-      onchange($index, row, prop, value) {
+      onChage($index, row, prop, value) {
         console.log('$index', $index)
         console.log('row', row)
         console.log('prop', prop)
         console.log('value', value)
       },
 
-      onclick($index, row) {
+      onClick($index, row) {
         console.log('click')
         console.log('$index', $index)
         console.log('row', row)
@@ -302,7 +298,7 @@
       /**
        * 带复选框列表复选时触发的事件
        */
-      onselectchange(dataArray) {
+      onSelectChange(dataArray) {
         console.log(JSON.stringify(dataArray, true, '  '))
       }
     }

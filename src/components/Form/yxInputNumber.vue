@@ -31,10 +31,10 @@
       }
     },
     methods: {
-      onEnter: function(env) {
+      onEnter(env) {
         this.config.onEnter && this.config.onEnter.call(null, env)
       },
-      onChange: function(changedVal) {
+      onChange(changedVal) {
         this.config.onChange && this.config.onChange.call(null, changedVal)
       }
     }

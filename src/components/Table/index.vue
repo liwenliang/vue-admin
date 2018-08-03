@@ -64,7 +64,7 @@
         <template v-else-if="item.type==='select'">
           <el-select :disabled="item.disabled"
                      v-model="scope.row[item.prop]"
-                     @change="item.onChange(scope.$index, scope.row, item.prop, scope.row[item.prop])"
+                     @change="item.onChage(scope.$index, scope.row, item.prop, scope.row[item.prop])"
                      placeholder="请选择">
             <el-option v-for="opt in item.options" :key="opt.label" :label="opt.label" :value="opt.value"></el-option>
           </el-select>
@@ -86,7 +86,7 @@
             :type="opt.type||'default'"
             :plain="opt.plain"
             size="small"
-            @click="opt.onclick(scope.$index, scope.row)">
+            @click="opt.onClick(scope.$index, scope.row)">
             {{opt.title}}
           </el-button>
         </template>
@@ -95,13 +95,13 @@
             <template v-if="opt.isNot">
               <el-button v-if="scope.row[opt.prop]!==opt.value" :disabled="opt.disabled" :plain="opt.plain"
                          :style="opt.style" :type="opt.type||'default'" size="small"
-                         @click="opt.onclick(scope.$index, scope.row)">{{opt.title}}
+                         @click="opt.onClick(scope.$index, scope.row)">{{opt.title}}
               </el-button>
             </template>
             <template v-else>
               <el-button v-if="scope.row[opt.prop]===opt.value" :disabled="opt.disabled" :plain="opt.plain"
                          :style="opt.style" :type="opt.type||'default'" size="small"
-                         @click="opt.onclick(scope.$index, scope.row)">{{opt.title}}
+                         @click="opt.onClick(scope.$index, scope.row)">{{opt.title}}
               </el-button>
             </template>
           </template>
@@ -124,7 +124,7 @@
           {{ scope.row[item.prop] | setDateTime(item.prop)}}
         </template>
         <template v-else-if="item.type==='customFilter'">
-          <div @click="item.onclick && item.onclick(scope.$index, scope.row, $event)"
+          <div @click="item.onClick && item.onClick(scope.$index, scope.row, $event)"
                v-html="customFilter(scope.row[item.prop], item, scope.row)"></div>
         </template>
         <template v-else-if="item.type==='progress'">
@@ -152,7 +152,7 @@
        * @param val
        * @returns {*}
        */
-      filterOperation: function(val, map, style) {
+      filterOperation(val, map, style) {
         for (var i = 0; i < map.length; i++) {
           var cur = map[i]
           if (cur.value === val) {
@@ -169,7 +169,7 @@
       * 过滤器，将时间戳转成时间格式 2017-02-09 20:22:14
       *
       * */
-      setDateTime: function(val) {
+      setDateTime(val) {
         var newdate = ''
         if (val) {
           var date = new Date(val)
@@ -188,7 +188,7 @@
       }
     },
 
-    data: function() {
+    data() {
       return {}
     },
 
@@ -197,7 +197,7 @@
        * 获取当前属性，如果通过.连接，需要下方属性
        * 目前只支持普通属性的展示使用
        */
-      getCurrentProp: function(row, prop) {
+      getCurrentProp(row, prop) {
         var resArr = prop.split('.')
         var result = ''
         if (prop.indexOf('.') === -1) {
@@ -213,7 +213,7 @@
       /**
        * 自定义过滤器
        */
-      customFilter: function(val, item, row) {
+      customFilter(val, item, row) {
         if (item && item.filter) {
           return item.filter(val, row)
         } else {

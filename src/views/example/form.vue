@@ -18,7 +18,7 @@
     components: {
       yxform
     },
-    data: function() {
+    data() {
       return {
         form: {
           emitValidate: false,

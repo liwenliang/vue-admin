@@ -23,7 +23,7 @@
         type: Object
       }
     },
-    data: function() {
+    data() {
       return {
         inputStyle: 'width:253px;'
       }
