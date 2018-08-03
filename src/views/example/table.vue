@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
-    <yxtable :table="table1"></yxtable>
-    <yxtable :table="table2"></yxtable>
+    <yxtable :table="table"></yxtable>
   </div>
 </template>
 
@@ -14,162 +13,210 @@
     },
     data() {
       return {
-        table1: {
+        table: {
           data: [
             {
-              id: '123456',
+              id: '000001',
               status: '1',
-              custom: 'custom',
               name: '张三',
+              sex: '0',
               bought: '1',
               photo: '//i2.letvimg.com/lc07_img/201701/05/20/58/avatar5.png',
               datetime: 1487695862000,
-              tags: ['1', '2', '3', '4']
+              tags: ['1', '2', '3', '4'],
+              progress: 50
             },
             {
-              id: '1',
+              id: '000002',
               status: '2',
-              custom: 'custom',
               name: '李四',
+              sex: '1',
               bought: '0',
               photo: '//i2.letvimg.com/lc07_img/201701/05/20/58/avatar5.png',
               datetime: 1487692862000,
-              tags: ['1', '2', '3', '4']
+              tags: ['1', '2', '3', '4'],
+              progress: 40
             },
             {
-              id: '456456',
+              id: '000003',
               status: '1',
-              custom: 'custom',
               name: '王五',
+              sex: '0',
               bought: '1',
               photo: '//i2.letvimg.com/lc07_img/201701/05/20/58/avatar5.png',
               datetime: 1487693862000,
-              tags: ['1', '2', '3', '4']
+              tags: ['1', '2', '3', '4'],
+              progress: 30
             },
             {
-              id: '456456',
+              id: '000004',
               status: '1',
-              custom: 'custom',
-              name: '王五',
+              name: '赵六',
+              sex: '0',
               bought: '0',
               photo: '//i2.letvimg.com/lc07_img/201701/05/20/58/avatar5.png',
               datetime: 1487694862000,
-              tags: ['1', '2', '3', '4']
+              tags: ['1', '2', '3', '4'],
+              progress: 90
             }
           ],
           select: {
-            isSelectable: false,
-            selectChange: function() {
+            isSelectable: true,
+            selectChange: function(selectedArr) {
+              console.log('----------------')
+              console.log(selectedArr)
+              console.log('----------------')
+            },
+            selectable: function(row, index) {
+              if (row.sex === '0') {
+                return false
+              } else {
+                return true
+              }
             }
           },
           attributes: [
             {
               prop: '',
-              label: 'client索引',
+              type: 'index',
+              label: 'index',
               fixed: 'left',
-              type: 'index'
+              width: '100'
             },
             {
-              prop: 'id',
-              label: '普通属性'
+              prop: 'sex',
+              type: 'select',
+              label: 'select',
+              sortable: true,
+              disabled: false,
+              onChange: this.onchange,
+              width: '100',
+              options: [
+                {
+                  value: '0',
+                  label: '男'
+                },
+                {
+                  value: '1',
+                  label: '女'
+                }
+              ]
             },
             {
               prop: 'name',
-              label: '可编辑属性',
               type: 'edit',
+              label: 'edit',
+              sortable: true,
+              width: '100',
               onEdit: this.onEdit
             },
             {
+              prop: 'id',
+              type: 'default',
+              label: 'default || ""',
+              sortable: true,
+              width: '120'
+            },
+            {
+              prop: 'name',
+              label: 'tooltip',
+              width: '100',
+              type: 'tooltip',
+              sortable: true,
+              style: 'cursor:pointer;color:blue;font-weight:bold;',
+              template: '<img src="http://api.app.letv.com/getqr?w=100&txt=ITEM_PROP"/>',
+              onClick: this.onClick
+            },
+            {
               prop: 'status',
-              label: 'value映射label',
+              label: 'mapList',
               type: 'mapList',
+              width: '100',
               options: [
                 {
                   value: '1',
-                  label: '已购买'
+                  label: '已购买',
+                  style: 'color:red;'
                 },
                 {
                   value: '2',
-                  label: '未购买'
+                  label: '未购买',
+                  style: 'color:brown;'
                 }
               ]
             },
             {
               prop: '',
-              label: '自定义text按钮',
-              type: 'custom',
+              label: 'buttons',
+              type: 'buttons',
+              fixed: 'right',
+              width: '200',
               options: [
                 {
-                  title: '设置',
+                  title: 'btn1',
+                  type: 'primary',
                   onclick: this.onclick
                 },
                 {
-                  title: '设置2',
+                  title: 'btn2',
+                  type: 'text',
+                  onclick: this.onclick
+                },
+                {
+                  title: 'btn3',
+                  type: 'danger',
                   onclick: this.onclick
                 }
               ]
             },
             {
               prop: '',
-              label: '自定义primary按钮',
-              type: 'custom',
-              options: [
-                {
-                  title: '设置',
-                  type: 'primary',
-                  onclick: this.onclick
-                }
-              ]
-            },
-            {
-              prop: 'bought',
-              label: '值定义操作按钮',
-              type: 'ifelse',
+              label: 'val2btn',
+              type: 'val2btn',
               width: '250',
               options: [
                 {
                   prop: 'status',
-                  title: '已经购买',
                   value: '1',
+                  title: '已买',
                   onclick: this.onclick
                 },
                 {
                   prop: 'status',
+                  value: '1',
                   title: '再次购买',
                   type: 'primary',
-                  value: '1',
                   onclick: this.buyAgain
                 },
                 {
                   prop: 'status',
+                  value: '1',
                   title: '评价',
                   type: 'warn',
-                  value: '1',
                   onclick: this.discuss
                 },
                 {
                   prop: 'status',
+                  value: '2',
                   title: '未购买,点击购买',
                   type: 'primary',
-                  value: '2',
                   onclick: this.onclick
                 }
               ]
             },
             {
               prop: 'photo',
-              label: '图片url形式',
-              type: 'photo'
-            },
-            {
-              prop: 'datetime',
-              label: '日期时间格式',
-              type: 'datetime'
+              label: 'photo',
+              type: 'photo',
+              width: '200',
+              photoWidth: 40,
+              photoHeight: 40
             },
             {
               prop: 'tags',
-              label: '多项映射关系',
+              label: 'tags',
               type: 'tags',
+              width: '280',
               options: [
                 {
                   value: '1',
@@ -188,97 +235,27 @@
                   label: 'pad'
                 }
               ]
-            }
-          ]
-        },
-        table2: {
-          data: [
+            },
             {
-              id: '123456',
-              name: '张三',
-              select: '0',
-              person: {
-                age: 23,
-                name: {
-                  abc: '222'
-                }
+              prop: 'datetime',
+              label: 'datetime',
+              type: 'datetime',
+              width: '160'
+            },
+            {
+              prop: 'progress',
+              label: 'customFilter',
+              type: 'customFilter',
+              width: '110',
+              filter: function(val, row) {
+                return `<h3 style="text-align: center;">${val}%</h3>`
               }
             },
             {
-              id: '234567',
-              name: '李四',
-              select: '1',
-              person: {
-                age: 43,
-                name: {
-                  abc: '222'
-                }
-              }
-            },
-            {
-              id: '345678',
-              name: '王五',
-              select: '2',
-              person: {
-                age: 33
-              }
-            },
-            {
-              id: '456789',
-              name: '赵六',
-              select: '3',
-              person: {
-                age: 22
-              }
-            }
-          ],
-          select: {
-            isSelectable: true,
-            selectChange: this.onselectchange
-          },
-          attributes: [
-            {
-              prop: '',
-              label: 'client索引',
-              type: 'index'
-            },
-            {
-              prop: 'id',
-              label: '普通属性id',
-              sortable: true
-            },
-            {
-              prop: 'name',
-              label: '普通属性name',
-              sortable: true
-            },
-            {
-              prop: 'person.age',
-              label: '对象下属性person.age'
-            },
-            {
-              prop: 'select',
-              label: '下拉选择',
-              type: 'select',
-              onChange: this.onchange,
-              options: [
-                {
-                  value: '0',
-                  label: '乐视网'
-                },
-                {
-                  value: '1',
-                  label: '爱奇艺'
-                },
-                {
-                  value: '2',
-                  label: '优酷土豆'
-                },
-                {
-                  value: '3',
-                  label: 'youtube'
-                }
-              ]
+              prop: 'progress',
+              label: 'progress',
+              type: 'progress',
+              width: '150'
             }
           ]
         }

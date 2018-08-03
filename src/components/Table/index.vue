@@ -35,27 +35,35 @@
            ifelse: 表示根据属性的不同展示不同的操作,比如状态为正常1时展示"屏蔽"对应操作,状态为不正常2时展示"恢复"对应操作
                没有type类型则是普通属性字段,正常展示
            ifelsetext: 同ifelse，只是显示的是普通文本，不是按钮；另外一个可以自定义样式
-
-
-
 -->
 <template>
   <el-table
     v-loading="loading" element-loading-text="加载中"
     :data="table.data" border stripe style="width:100%;"
     @selection-change="table.select.selectChange">
-    <template v-if="table.select.isSelectable">
-      <el-table-column type="selection" width="55"></el-table-column>
-    </template>
-    <el-table-column v-for="item in table.attributes" :key="item.label" v-if="!item.isHide" :width="item.width" :fixed="item.fixed"
-                     :prop="item.prop" :label="item.label" :sortable="item.sortable"
-                     :sort-method="item.sortMethod || function(){}" :formatter="item.formatter">
+    <el-table-column
+      v-if="table.select.isSelectable"
+      type="selection"
+      :selectable="table.select.selectable"
+      width="40">
+    </el-table-column>
+    <el-table-column v-for="item in table.attributes"
+                     :key="item.label"
+                     v-if="!item.isHide"
+                     :width="item.width"
+                     :fixed="item.fixed"
+                     :prop="item.prop"
+                     :label="item.label"
+                     :sortable="item.sortable"
+                     :sort-method="item.sortMethod || function(){}"
+                     :formatter="item.formatter">
       <template slot-scope="scope">
         <template v-if="item.type==='index'">
           {{scope.$index+1}}
         </template>
         <template v-else-if="item.type==='select'">
-          <el-select :disabled="item.disabled" v-model="scope.row[item.prop]"
+          <el-select :disabled="item.disabled"
+                     v-model="scope.row[item.prop]"
                      @change="item.onChange(scope.$index, scope.row, item.prop, scope.row[item.prop])"
                      placeholder="请选择">
             <el-option v-for="opt in item.options" :key="opt.label" :label="opt.label" :value="opt.value"></el-option>
@@ -70,12 +78,19 @@
         <template v-else-if="item.type==='mapList'">
           <span :style="scope.row[item.prop] | filterOperation(item.options,1)">{{ scope.row[item.prop] | filterOperation(item.options)}}</span>
         </template>
-        <template v-else-if="item.type==='custom'">
-          <el-button v-for="opt in item.options" :key="opt.title" :disabled="opt.disabled" :type="opt.type||'default'" :plain="opt.plain"
-                     size="small" @click="opt.onclick(scope.$index, scope.row)">{{opt.title}}
+        <template v-else-if="item.type==='buttons'">
+          <el-button
+            v-for="opt in item.options"
+            :key="opt.title"
+            :disabled="opt.disabled"
+            :type="opt.type||'default'"
+            :plain="opt.plain"
+            size="small"
+            @click="opt.onclick(scope.$index, scope.row)">
+            {{opt.title}}
           </el-button>
         </template>
-        <template v-else-if="item.type==='ifelse'">
+        <template v-else-if="item.type==='val2btn'">
           <template v-for="opt in item.options">
             <template v-if="opt.isNot">
               <el-button v-if="scope.row[opt.prop]!==opt.value" :disabled="opt.disabled" :plain="opt.plain"
@@ -91,28 +106,18 @@
             </template>
           </template>
         </template>
-        <template v-else-if="item.type==='ifelsetext'">
-          <template v-for="opt in item.options">
-            <div v-if="scope.row[opt.prop]===opt.value" :style="opt.style"
-                 @click="opt.onclick && opt.onclick(scope.$index, scope.row)">{{getCurrentProp(scope.row, item.prop)}}
-            </div>
-          </template>
-        </template>
-        <template v-else-if="item.type==='ifelseSelect'">
-          <template v-if="item.checkvalue.indexOf(scope.row[item.prop])>-1">
-            <leselect :scope=scope :item=item></leselect>
-          </template>
-          <template v-else>
-            <span :style="scope.row[item.prop] | filterOperation(item.allOptions,1)">{{ scope.row[item.prop] | filterOperation(item.allOptions)}}</span>
-          </template>
-        </template>
         <div style="text-align:center;" v-else-if="item.type==='photo'">
-          <img :width="item.photoWidth || 50" :height="item.photoHeight || 50"
-               style="vertical-align:middle;margin: 5px auto;border: 1px solid gray;" :src=scope.row[item.prop]>
+          <img :width="item.photoWidth || 50"
+               :height="item.photoHeight || 50"
+               style="vertical-align:middle;margin: 5px auto;border: 1px solid gray;"
+               :src=scope.row[item.prop]>
         </div>
         <template v-else-if="item.type==='tags'">
-          <el-tag style="margin-right:5px;" type="success" v-for="tag in scope.row[item.prop]" :key="tag">{{ tag |
-            filterOperation(item.options)}}
+          <el-tag
+            style="margin-right:5px;"
+            type="success"
+            v-for="tag in scope.row[item.prop]"
+            :key="tag">{{ tag | filterOperation(item.options)}}
           </el-tag>
         </template>
         <template v-else-if="item.type==='datetime'">
@@ -126,7 +131,7 @@
           <el-progress :percentage="getCurrentProp(scope.row, item.prop)"></el-progress>
         </template>
         <template v-else>
-          <div :style="item.style">{{item.filter && item.filter(scope.row, item.prop) || getCurrentProp(scope.row, item.prop)}}</div>
+          <div :style="item.style">{{getCurrentProp(scope.row, item.prop)}}</div>
         </template>
       </template>
     </el-table-column>
@@ -135,7 +140,6 @@
 
 <script>
   import lepopver from './popver'
-  import leselect from './select'
   import letooltip from './tooltip'
 
   export default {
@@ -220,7 +224,6 @@
 
     components: {
       lepopver: lepopver,
-      leselect: leselect,
       letooltip: letooltip
     }
   }
